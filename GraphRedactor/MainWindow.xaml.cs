@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 
 
@@ -21,6 +22,7 @@ namespace GraphRedactor
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         Line line = new Line(); //линия
         public static LineSettings brushes;
         public Color curentBrush;
@@ -48,7 +50,7 @@ namespace GraphRedactor
             MyCanvasList.Add(myGroup);
             for (int i = 0; i < 2; i++)
             {
-                zCoordinates.Add(0);
+                zCoordinates.Add(5);
             }
             brushes = new LineSettings(2, Colors.Black);
             LineColorPicker.DataContext = brushes;
@@ -56,6 +58,7 @@ namespace GraphRedactor
             LineSettings.Visibility = Visibility.Hidden;
             MorphingSettings.Visibility = Visibility.Hidden;
             Oper3D.Visibility = Visibility.Hidden;
+            
         }
         private void checkPressAnyButton(Button but)
         {
@@ -1181,6 +1184,68 @@ namespace GraphRedactor
             MyCanvasFT.Children.Add(line);
         }
         public float XX1,YY1,WWidth,Hheight;
+
+        private void SliderZ3D_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Vector3D vector = new Vector3D(0, 0, 1);
+            rotate.Axis = vector;
+        }
+
+        private void SliderY3D_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Vector3D vector = new Vector3D(0, 1, 0);
+            rotate.Axis = vector;
+        }
+
+        private void SliderX3D_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Vector3D vector = new Vector3D(1, 0, 0);
+            rotate.Axis = vector;
+        }
+
+
+        private void Create3D_Click(object sender, RoutedEventArgs e)
+        {
+            if(View3D.Visibility == Visibility.Visible)
+            {
+                View3D.Visibility = Visibility.Hidden;
+                StackPanel3D.Visibility = Visibility.Hidden;
+                MyCanvas.IsEnabled = true;
+                DefaultPanel.Visibility = Visibility.Visible;
+                _3DPanel.Visibility = Visibility.Hidden;
+                Oper3D.Visibility = Visibility.Hidden;
+                LineSettings.Visibility = Visibility.Hidden;
+                MorphingSettings.Visibility = Visibility.Hidden;
+                TreeSettings.Visibility = Visibility.Hidden;
+            }
+            else 
+            {
+                //MeshGeometry3D meshGeometry3D = new MeshGeometry3D();
+                MyCanvas.IsEnabled = false;
+                Point3DCollection point3D = new Point3DCollection();
+                Point3D point3 = new Point3D();
+                foreach (Line obj in lineGroup)
+                {
+                    point3.X = obj.X1;
+                    point3.Y = obj.Y1;
+                    point3.Z = 5;
+                    point3D.Add(point3);
+                    point3.X = obj.X2;
+                    point3.Y = obj.Y2;
+                    point3.Z = 5;
+                    point3D.Add(point3);
+                    meshGeometry3D.Positions = point3D;
+                }
+                View3D.Visibility = Visibility.Visible;
+                StackPanel3D.Visibility = Visibility.Visible;
+                DefaultPanel.Visibility = Visibility.Hidden;
+                _3DPanel.Visibility = Visibility.Visible;
+                Oper3D.Visibility = Visibility.Hidden;
+                LineSettings.Visibility = Visibility.Hidden;
+                MorphingSettings.Visibility = Visibility.Hidden;
+                TreeSettings.Visibility = Visibility.Hidden;
+            }
+        }
 
         private void ChoiceFractal_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
