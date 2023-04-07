@@ -12,5 +12,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
       with:
         msbuild-version: '16.0'
+    - name: Restore NuGet packages
+      run: nuget restore
     - name: Build solution
       run: msbuild /p:Configuration=Release /p:Platform="Any CPU" /t:build GraphRedactor.sln
