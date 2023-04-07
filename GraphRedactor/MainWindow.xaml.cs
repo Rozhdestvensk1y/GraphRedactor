@@ -814,6 +814,7 @@ namespace GraphRedactor
         }
         public void RotateAngleZ(double aZ)
         {
+            int dsf;
             morhingPrevArray();
             double a = angleZ - aZ;
             angleZ = aZ;
