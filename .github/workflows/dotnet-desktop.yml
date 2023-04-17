@@ -1,18 +1,20 @@
-name: Build
+name: Generate documentation
 on:
   push:
     branches:
       - master
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup MSBuild path
-      uses: microsoft/setup-msbuild@v1.0.2
-      with:
-        msbuild-version: '16.0'
-    - name: Restore NuGet packages
-      run: nuget restore $env:GITHUB_WORKSPACE/GraphRedactor.sln
-    - name: Build solution
-      run: msbuild /p:Configuration=Release /p:Platform="Any CPU" /t:build GraphRedactor.sln
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen
+      - name: Generate documentation
+        run: doxygen Doxyfile_csharp
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
